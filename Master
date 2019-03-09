@@ -1,0 +1,108 @@
+Maffichage=pourafficher(0.1, 0.1, 0.1, 0.1, 0.1, 0.1);
+figure(2);
+plot(Maffichage(1,1:end),Maffichage(2,1:end));
+
+PositionOutil = position(-0.4, -1.2, 0.0, 0.0, -0.3708, 0.);
+Position_repere_piece(1) = PositionOutil(1)-0.5994;
+Position_repere_piece(3) = PositionOutil(3)-0.1991;
+Position_repere_piece(2) = PositionOutil(2);;
+disp(Position_repere_piece);
+
+function Maffichage= pourafficher(theta1, theta2, theta3, theta4, theta5, theta6)
+
+theta7=0.5;
+angletranche=atan(0.05/.15);
+
+wRa = [cos(theta1) 0 sin(theta1); 0 1 0; -sin(theta1) 0 cos(theta1)]; %axe 2
+aRb = [cos(theta2) -sin(theta2) 0; sin(theta2) cos(theta2) 0; 0 0 1]; %axe 3
+bRc = [cos(theta3) -sin(theta3) 0; sin(theta3) cos(theta3) 0; 0 0 1]; %axe 3
+cRd = [1 0 0; 0 cos(theta4) -sin(theta4); 0 sin(theta4) cos(theta4)]; %axe 1
+dRe = [cos(theta5) -sin(theta5) 0; sin(theta5) cos(theta5) 0; 0 0 1]; %axe 3
+eRt = [1 0 0; 0 cos(theta6) -sin(theta6); 0 sin(theta6) cos(theta6)]; %axe 1
+%tRv = [cos(theta7) -sin(theta7) 0; sin(theta7) cos(theta7) 0; 0 0 1]; %axe 3
+wRv = [cos(pi) sin(pi) 0; -sin(pi) cos(pi) 0; 0 0 1];
+
+%wRt = wRa*aRb*cRb*dRc*eRd*tRe; %Matrice de rotation globale du world à l'outil
+wRb = wRa*aRb; %Matrice de rotation de b à w
+wRc = wRb*bRc; %Matrice de rotation de c à w
+wRd = wRc*cRd; %Matrice de rotation de d à w
+wRe = wRd*dRe; %Matrice de rotation de e à w
+
+r_w_www = [0; 0; 0];
+r_w_aww = [0 ;0.15; 0];
+r_a_bwa = [0.05; 0.1; 0];
+r_b_cwb = [0; 0.5; 0];
+r_c_dwc = [0.1; 0.02; 0];
+r_d_ewd = [0.3; 0; 0];
+r_e_twe = [0.02; 0; 0];
+r_w_vww = [0.8; 0.7; 0];
+r_v_T1wv =[0.158920; 0.013914; 0.028686];
+r_v_T2wv =[0.157470; 0.021067; 0.008891];
+r_v_T3wv =[0.153781; 0.039266; -0.040587];
+r_v_T4wv =[0.152420; 0.04597; -0.060395];
+r_v_T5wv =[0.150931; 0.05326; -0.080185];
+
+r_a_bww=wRa*r_a_bwa;
+r_b_cww=wRb*r_b_cwb;
+r_c_dww=wRc*r_c_dwc;
+r_d_eww=wRd*r_d_ewd;
+r_e_tww=wRe*r_e_twe;
+
+r_w_tww = r_w_www + r_w_aww + r_a_bww + r_b_cww + r_c_dww + r_d_eww + r_e_tww;
+%r_v_T1ww = r_v_T1wv*wRv + r_w_vww;
+%r_v_T2ww = r_v_T2wv*wRv + r_w_vww;
+%r_v_T3ww = r_v_T3wv*wRv + r_w_vww;
+%r_v_T4ww = r_v_T4wv*wRv + r_w_vww;
+%r_v_T5ww = r_v_T5wv*wRv + r_w_vww;
+
+for i=1:1:3
+Maffichage(i,1)= r_w_www(i);
+Maffichage(i,2)= r_w_aww(i);
+Maffichage(i,3)= Maffichage(i,2)+r_a_bww(i);
+Maffichage(i,4)= Maffichage(i,3)+r_b_cww(i);
+Maffichage(i,5)= Maffichage(i,4)+r_c_dww(i);
+Maffichage(i,6)= Maffichage(i,5)+r_d_eww(i);
+Maffichage(i,7)= Maffichage(i,6)+r_e_tww(i);
+end
+%Maffichage= [r_w_www(1) r_w_aww(1) r_a_bww(1) r_b_cww(1) r_c_dww(1) r_d_eww(1) r_e_tww(1);
+%             r_w_www(2) r_w_aww(2) r_a_bww(2)+r_w_aww(2) r_b_cww(2) r_c_dww(2) r_d_eww(2) r_e_tww(2);
+%             r_w_www(3) r_w_aww(3) r_a_bww(3)+r_w_aww(3) r_b_cww(3) r_c_dww(3) r_d_eww(3) r_e_tww(3)];
+
+disp(Maffichage)
+
+end
+
+function PositionOutil = position(theta1, theta2, theta3, theta4, theta5, theta6)
+
+wRa = [cos(theta1) 0 sin(theta1); 0 1 0; -sin(theta1) 0 cos(theta1)]; %axe 2
+aRb = [cos(theta2) -sin(theta2) 0; sin(theta2) cos(theta2) 0; 0 0 1]; %axe 3
+bRc = [cos(theta3) -sin(theta3) 0; sin(theta3) cos(theta3) 0; 0 0 1]; %axe 3
+cRd = [1 0 0; 0 cos(theta4) -sin(theta4); 0 sin(theta4) cos(theta4)]; %axe 1
+dRe = [cos(theta5) -sin(theta5) 0; sin(theta5) cos(theta5) 0; 0 0 1]; %axe 3
+eRt = [1 0 0; 0 cos(theta6) -sin(theta6); 0 sin(theta6) cos(theta6)]; %axe 1
+
+r_w_www = [0; 0; 0];
+r_w_aww = [0 ;0.15; 0];
+r_a_bwa = [0.05; 0.1; 0];
+r_b_cwb = [0; 0.5; 0];
+r_c_dwc = [0.1; 0.02; 0];
+r_d_ewd = [0.3; 0; 0];
+r_e_twe = [0.02; 0; 0];
+
+wRb = wRa*aRb; %Matrice de rotation de b à w
+wRc = wRb*bRc; %Matrice de rotation de c à w
+wRd = wRc*cRd; %Matrice de rotation de d à w
+wRe = wRd*dRe; %Matrice de rotation de e à w
+
+r_a_bww=wRa*r_a_bwa;
+r_b_cww=wRb*r_b_cwb;
+r_c_dww=wRc*r_c_dwc;
+r_d_eww=wRd*r_d_ewd;
+r_e_tww=wRe*r_e_twe;
+
+r_w_tww = r_w_www + r_w_aww + r_a_bww + r_b_cww + r_c_dww + r_d_eww + r_e_tww;
+PositionOutil = r_w_tww;
+
+disp(PositionOutil)
+
+end
