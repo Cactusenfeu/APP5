@@ -1,17 +1,12 @@
-Maffichage=pourafficher(0.1, 0.1, 0.1, 0.1, 0.1, 0.1);
+Maffichage=pourafficher(0, 0, 0, 0, 0, 0);
 figure(2);
-plot(Maffichage(1,1:end),Maffichage(2,1:end));
+plot3(Maffichage(1,1:end),Maffichage(3,1:end), Maffichage(2,1:end));
 
-PositionOutil = position(-0.4, -1.2, 0.0, 0.0, -0.3708, 0.);
-Position_repere_piece(1) = PositionOutil(1)-0.5994;
-Position_repere_piece(3) = PositionOutil(3)-0.1991;
-Position_repere_piece(2) = PositionOutil(2);;
-disp(Position_repere_piece);
 
 function Maffichage= pourafficher(theta1, theta2, theta3, theta4, theta5, theta6)
 
 theta7=0.5;
-angletranche=atan(0.05/.15);
+angle_tranche=atan(0.05/.15);
 
 wRa = [cos(theta1) 0 sin(theta1); 0 1 0; -sin(theta1) 0 cos(theta1)]; %axe 2
 aRb = [cos(theta2) -sin(theta2) 0; sin(theta2) cos(theta2) 0; 0 0 1]; %axe 3
@@ -20,9 +15,9 @@ cRd = [1 0 0; 0 cos(theta4) -sin(theta4); 0 sin(theta4) cos(theta4)]; %axe 1
 dRe = [cos(theta5) -sin(theta5) 0; sin(theta5) cos(theta5) 0; 0 0 1]; %axe 3
 eRt = [1 0 0; 0 cos(theta6) -sin(theta6); 0 sin(theta6) cos(theta6)]; %axe 1
 %tRv = [cos(theta7) -sin(theta7) 0; sin(theta7) cos(theta7) 0; 0 0 1]; %axe 3
-wRv = [cos(pi) sin(pi) 0; -sin(pi) cos(pi) 0; 0 0 1];
+wRv = [cos(pi) sin(pi) 0; -sin(pi) cos(pi) 0; 0 0 1]; %axe3
+wRt = wRa*aRb*bRc*cRd*dRe*eRt; %Matrice de rotation globale du world à l'outil
 
-%wRt = wRa*aRb*cRb*dRc*eRd*tRe; %Matrice de rotation globale du world à l'outil
 wRb = wRa*aRb; %Matrice de rotation de b à w
 wRc = wRb*bRc; %Matrice de rotation de c à w
 wRd = wRc*cRd; %Matrice de rotation de d à w
@@ -93,6 +88,7 @@ wRb = wRa*aRb; %Matrice de rotation de b à w
 wRc = wRb*bRc; %Matrice de rotation de c à w
 wRd = wRc*cRd; %Matrice de rotation de d à w
 wRe = wRd*dRe; %Matrice de rotation de e à w
+wRt = wRa*aRb*bRc*cRd*dRe*eRt; %Matrice de rotation globale du world à l'outil
 
 r_a_bww=wRa*r_a_bwa;
 r_b_cww=wRb*r_b_cwb;
@@ -103,6 +99,12 @@ r_e_tww=wRe*r_e_twe;
 r_w_tww = r_w_www + r_w_aww + r_a_bww + r_b_cww + r_c_dww + r_d_eww + r_e_tww;
 PositionOutil = r_w_tww;
 
-disp(PositionOutil)
+r_p_twp= [0.0266;0.0656;0];
+r_w_pww = (r_w_tww-r_p_twp);
+disp(r_w_tww);
+disp(r_w_pww);
+
+r_w_vww = [0.8;0.7;0];
+r_p_tww = r_w_vww-r_w_pww;
 
 end
